@@ -1,0 +1,24 @@
+{
+  "name": "data-repeat",
+  "version": "1.0.4",
+  "description": "Repeat elements inside HTML pages using a simple attribute.",
+  "main": "dist/data-repeat.js",
+  "module": "dist/data-repeat.js",
+  "scripts": {},
+  "keywords": [
+    "repeat",
+    "html",
+    "attribute",
+    "dom"
+  ],
+  "author": {
+    "name": "Dollarsigned",
+    "url": "https://dollarsigned.com"
+  },
+  "license": "ISC",
+  "unpkg": "dist/data-repeat.js",
+  "jsdelivr": "dist/data-repeat.js",
+  "devDependencies": {
+    "esbuild": "^0.25.2"
+  }
+}
