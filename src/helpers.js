@@ -46,7 +46,7 @@ export function injectRepeatCSS() {
 
 /**
  * The `repeatElements` function clones elements with a `data-repeat` attribute, adjusts their content
- * based on `data-words`, and inserts them into the DOM.
+ * based on a `data-words` attribute, and removes the original element after cloning.
  */
 export function repeatElements() {
   const elementsWithRepeat = Array.from(
@@ -58,27 +58,26 @@ export function repeatElements() {
   for (const element of elementsWithRepeat) {
     const count = parseInt(element.dataset.repeat, 10);
     const wordCount = parseInt(element.dataset.words, 10);
+    const parent = element.parentElement;
 
-    if (!isNaN(count) && count > 1) {
-      for (let i = 0; i < count - 1; i++) {
-        const clone = element.cloneNode(true);
-        clone.removeAttribute("data-repeat");
-        clone.removeAttribute("data-words");
+    if (!isNaN(count) && count > 0) {
+      for (let i = 0; i < count; i++) {
+        const clone = i === 0 ? element : element.cloneNode(true);
 
         if (!isNaN(wordCount)) {
           clone.textContent = getRandomSentence(wordCount);
         }
 
-        element.parentElement.insertBefore(clone, element.nextSibling);
+        clone.removeAttribute("data-repeat");
+        clone.removeAttribute("data-words");
+
+        if (i > 0 && parent) {
+          parent.insertBefore(clone, element.nextSibling);
+        }
       }
-    }
 
-    if (!isNaN(wordCount)) {
-      element.textContent = getRandomSentence(wordCount);
+      if (parent) parent.removeChild(element); // remove the original
     }
-
-    element.removeAttribute("data-repeat");
-    element.removeAttribute("data-words");
   }
 }
 
