@@ -45,8 +45,9 @@ export function injectRepeatCSS() {
 }
 
 /**
- * The `repeatElements` function clones elements with a `data-repeat` attribute, repeats them based on
- * the specified count, and populates them with random sentences based on the specified word count.
+ * The `repeatElements` function clones elements with a `data-repeat` attribute, repeating them based
+ * on the specified count, and optionally replacing text content with random sentences based on the
+ * `data-repeatWords` attribute.
  */
 export function repeatElements() {
   const elementsWithRepeat = Array.from(
@@ -57,9 +58,7 @@ export function repeatElements() {
 
   for (const element of elementsWithRepeat) {
     const count = parseInt(element.dataset.repeat, 10);
-    const [wordCountRaw, selector] = (element.dataset.words || "").split(",");
-
-    const wordCount = parseInt(wordCountRaw, 10);
+    const wordCount = parseInt(element.dataset.words, 10);
 
     if (!isNaN(count) && count > 1) {
       for (let i = 0; i < count - 1; i++) {
@@ -67,13 +66,8 @@ export function repeatElements() {
         clone.removeAttribute("data-repeat");
 
         if (!isNaN(wordCount)) {
-          const sentence = getRandomSentence(wordCount);
-          if (selector) {
-            const target = clone.querySelector(selector.trim());
-            if (target) target.textContent = sentence;
-          } else {
-            clone.textContent = sentence;
-          }
+          const randomSentence = getRandomSentence(wordCount);
+          clone.textContent = randomSentence;
         }
 
         element.parentElement.insertBefore(clone, element.nextSibling);
@@ -81,13 +75,7 @@ export function repeatElements() {
     }
 
     if (!isNaN(wordCount)) {
-      const sentence = getRandomSentence(wordCount);
-      if (selector) {
-        const target = element.querySelector(selector.trim());
-        if (target) target.textContent = sentence;
-      } else {
-        element.textContent = sentence;
-      }
+      element.textContent = getRandomSentence(wordCount);
     }
 
     element.removeAttribute("data-repeat");
