@@ -27,5 +27,5 @@ Only include a script tag and you are good to go!
 ```
 
 <p align="center">
-    <img src="/art/footer-navigation.png" />
+    <img src="https://raw.githubusercontent.com/Dollarsigned/data-repeat/refs/heads/main/art/footer-navigation.png" />
 </p>
