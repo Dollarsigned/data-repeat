@@ -1,3 +1,29 @@
+const loremWords = (
+  "lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua " +
+  "ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure " +
+  "dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non " +
+  "proident sunt in culpa qui officia deserunt mollit anim id est laborum"
+).split(" ");
+
+/**
+ * This JavaScript function generates a random sentence with a specified number of words by selecting
+ * words from a predefined array and capitalizing the first letter of the sentence.
+ * @param wordCount - The `wordCount` parameter in the `getRandomSentence` function specifies the
+ * number of words you want the random sentence to contain. This parameter determines how many words
+ * will be randomly selected from the `loremWords` array to form the sentence.
+ * @returns The function `getRandomSentence` returns a randomly generated sentence with the specified
+ * number of words, where the first letter is capitalized and the sentence ends with a period.
+ */
+function getRandomSentence(wordCount) {
+  const words = [];
+  for (let i = 0; i < wordCount; i++) {
+    const word = loremWords[Math.floor(Math.random() * loremWords.length)];
+    words.push(word);
+  }
+  const sentence = words.join(" ");
+  return sentence.charAt(0).toUpperCase() + sentence.slice(1) + ".";
+}
+
 /**
  * The `injectCSS` function in JavaScript creates a new `<style>` tag and appends it to the `<head>` of
  * the document with the provided CSS text content.
@@ -19,8 +45,9 @@ export function injectRepeatCSS() {
 }
 
 /**
- * The `repeatElements` function duplicates elements with a `data-repeat` attribute based on the
- * specified count value.
+ * The `repeatElements` function clones elements with a `data-repeat` attribute, repeating them based
+ * on the specified count, and optionally replacing text content with random sentences based on the
+ * `data-repeatWords` attribute.
  */
 export function repeatElements() {
   const elementsWithRepeat = Array.from(
@@ -31,14 +58,28 @@ export function repeatElements() {
 
   for (const element of elementsWithRepeat) {
     const count = parseInt(element.dataset.repeat, 10);
+    const wordCount = parseInt(element.dataset.repeatWords, 10);
+
     if (!isNaN(count) && count > 1) {
       for (let i = 0; i < count - 1; i++) {
         const clone = element.cloneNode(true);
         clone.removeAttribute("data-repeat");
+
+        if (!isNaN(wordCount)) {
+          const randomSentence = getRandomSentence(wordCount);
+          clone.textContent = randomSentence;
+        }
+
         element.parentElement.insertBefore(clone, element.nextSibling);
       }
     }
+
+    if (!isNaN(wordCount)) {
+      element.textContent = getRandomSentence(wordCount);
+    }
+
     element.removeAttribute("data-repeat");
+    element.removeAttribute("data-repeat-words");
   }
 }
 
