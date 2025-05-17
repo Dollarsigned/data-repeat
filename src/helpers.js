@@ -45,7 +45,7 @@ export function injectRepeatCSS() {
  * based on a `data-words` attribute, and removes the original element after cloning.
  */
 
-export function repeatElementsTopDown(root = document.body) {
+export function repeatElements(root = document.body) {
   const elements = Array.from(root.querySelectorAll("[data-repeat]"));
 
   for (const el of elements) {
