@@ -45,9 +45,8 @@ export function injectRepeatCSS() {
 }
 
 /**
- * The `repeatElements` function clones elements with a `data-repeat` attribute, repeating them based
- * on the specified count, and optionally replacing text content with random sentences based on the
- * `data-repeatWords` attribute.
+ * The `repeatElements` function clones elements with a `data-repeat` attribute, adjusts their content
+ * based on `data-words`, and inserts them into the DOM.
  */
 export function repeatElements() {
   const elementsWithRepeat = Array.from(
@@ -64,10 +63,10 @@ export function repeatElements() {
       for (let i = 0; i < count - 1; i++) {
         const clone = element.cloneNode(true);
         clone.removeAttribute("data-repeat");
+        clone.removeAttribute("data-words");
 
         if (!isNaN(wordCount)) {
-          const randomSentence = getRandomSentence(wordCount);
-          clone.textContent = randomSentence;
+          clone.textContent = getRandomSentence(wordCount);
         }
 
         element.parentElement.insertBefore(clone, element.nextSibling);
