@@ -16,5 +16,5 @@ Repeat elements inside HTML pages using a simple attribute.
 ```
 
 <p align="center">
-    <img src="./art/footer-navigation.png" />
+    <img src="/art/footer-navigation.png" />
 </p>
