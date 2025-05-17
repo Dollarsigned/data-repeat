@@ -1,5 +1,16 @@
 Repeat elements inside HTML pages using a simple attribute.
 
+## Installation
+
+Only include a script tag and you are good to go!
+
+```html
+<head>
+  <!-- ... -->
+  <script src="https://unpkg.com/data-repeat"></script>
+</head>
+```
+
 ## Examples
 
 ### Footer Navigation
