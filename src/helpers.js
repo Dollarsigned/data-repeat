@@ -45,9 +45,8 @@ export function injectRepeatCSS() {
 }
 
 /**
- * The `repeatElements` function clones elements with a `data-repeat` attribute, repeating them based
- * on the specified count, and optionally replacing text content with random sentences based on the
- * `data-repeatWords` attribute.
+ * The `repeatElements` function clones elements with a `data-repeat` attribute, repeats them based on
+ * the specified count, and populates them with random sentences based on the specified word count.
  */
 export function repeatElements() {
   const elementsWithRepeat = Array.from(
@@ -58,7 +57,9 @@ export function repeatElements() {
 
   for (const element of elementsWithRepeat) {
     const count = parseInt(element.dataset.repeat, 10);
-    const wordCount = parseInt(element.dataset.repeatWords, 10);
+    const [wordCountRaw, selector] = (element.dataset.words || "").split(",");
+
+    const wordCount = parseInt(wordCountRaw, 10);
 
     if (!isNaN(count) && count > 1) {
       for (let i = 0; i < count - 1; i++) {
@@ -66,8 +67,13 @@ export function repeatElements() {
         clone.removeAttribute("data-repeat");
 
         if (!isNaN(wordCount)) {
-          const randomSentence = getRandomSentence(wordCount);
-          clone.textContent = randomSentence;
+          const sentence = getRandomSentence(wordCount);
+          if (selector) {
+            const target = clone.querySelector(selector.trim());
+            if (target) target.textContent = sentence;
+          } else {
+            clone.textContent = sentence;
+          }
         }
 
         element.parentElement.insertBefore(clone, element.nextSibling);
@@ -75,11 +81,17 @@ export function repeatElements() {
     }
 
     if (!isNaN(wordCount)) {
-      element.textContent = getRandomSentence(wordCount);
+      const sentence = getRandomSentence(wordCount);
+      if (selector) {
+        const target = element.querySelector(selector.trim());
+        if (target) target.textContent = sentence;
+      } else {
+        element.textContent = sentence;
+      }
     }
 
     element.removeAttribute("data-repeat");
-    element.removeAttribute("data-repeat-words");
+    element.removeAttribute("data-words");
   }
 }
 
