@@ -6,22 +6,18 @@ const loremWords = (
 ).split(" ");
 
 /**
- * This JavaScript function generates a random sentence with a specified number of words by selecting
- * words from a predefined array and capitalizing the first letter of the sentence.
- * @param wordCount - The `wordCount` parameter in the `getRandomSentence` function specifies the
- * number of words you want the random sentence to contain. This parameter determines how many words
- * will be randomly selected from the `loremWords` array to form the sentence.
- * @returns The function `getRandomSentence` returns a randomly generated sentence with the specified
- * number of words, where the first letter is capitalized and the sentence ends with a period.
+ * The function `randomWords` generates a specified number of random words from a predefined list and
+ * returns them as a sentence with the first letter capitalized.
+ * @param count - The `count` parameter in the `randomWords` function specifies the number of random
+ * words that will be selected from the `loremWords` array and concatenated to form the final string.
+ * @returns The `randomWords` function returns a string consisting of a specified number of randomly
+ * selected words from the `loremWords` array. The words are joined together with spaces, converted to
+ * lowercase, and then the first letter is capitalized before being returned.
  */
-function getRandomSentence(wordCount) {
-  const words = [];
-  for (let i = 0; i < wordCount; i++) {
-    const word = loremWords[Math.floor(Math.random() * loremWords.length)];
-    words.push(word);
-  }
-  const sentence = words.join(" ");
-  return sentence.charAt(0).toUpperCase() + sentence.slice(1) + ".";
+function randomWords(count) {
+  loremWords.sort(() => 0.5 - Math.random());
+  const finalString = loremWords.slice(0, count).join(" ").toLowerCase();
+  return finalString.charAt(0).toUpperCase() + finalString.slice(1);
 }
 
 /**
@@ -65,7 +61,7 @@ export function repeatElements() {
         const clone = i === 0 ? element : element.cloneNode(true);
 
         if (!isNaN(wordCount)) {
-          clone.textContent = getRandomSentence(wordCount);
+          clone.textContent = randomWords(wordCount);
         }
 
         clone.removeAttribute("data-repeat");
