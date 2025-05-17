@@ -44,52 +44,55 @@ export function injectRepeatCSS() {
  * The `repeatElements` function clones elements with a `data-repeat` attribute, adjusts their content
  * based on a `data-words` attribute, and removes the original element after cloning.
  */
-export function repeatElements() {
-  const elementsWithRepeat = Array.from(
-    document.querySelectorAll("[data-repeat]")
-  );
 
-  elementsWithRepeat.sort((a, b) => getDepth(b) - getDepth(a));
+export function repeatElementsTopDown(root = document.body) {
+  const elements = Array.from(root.querySelectorAll("[data-repeat]"));
 
-  for (const element of elementsWithRepeat) {
-    const count = parseInt(element.dataset.repeat, 10);
-    const wordCount = parseInt(element.dataset.words, 10);
-    const parent = element.parentElement;
+  for (const el of elements) {
+    const count = parseInt(el.dataset.repeat, 10);
+    if (isNaN(count) || count < 1) continue;
 
-    if (!isNaN(count) && count > 0) {
-      for (let i = 0; i < count; i++) {
-        const clone = i === 0 ? element : element.cloneNode(true);
+    const parent = el.parentElement;
+    const clones = [];
 
-        if (!isNaN(wordCount)) {
-          clone.textContent = randomWords(wordCount);
-        }
+    for (let i = 0; i < count; i++) {
+      const clone = el.cloneNode(true);
+      clone.removeAttribute("data-repeat");
 
-        clone.removeAttribute("data-repeat");
-        clone.removeAttribute("data-words");
+      // Immediately fill words on this clone
+      applyDataWords(clone);
 
-        if (i > 0 && parent) {
-          parent.insertBefore(clone, element.nextSibling);
-        }
-      }
+      parent.insertBefore(clone, el);
+      clones.push(clone);
+    }
 
-      if (parent) parent.removeChild(element); // remove the original
+    parent.removeChild(el); // remove the original
+
+    // Recursively process inner repeats in each clone
+    for (const clone of clones) {
+      repeatElementsTopDown(clone);
     }
   }
+
+  // Also apply to the current root if needed
+  applyDataWords(root);
 }
 
-/**
- * The function `getDepth` calculates the depth of an element within the DOM tree by counting the
- * number of its parent elements.
- * @param element - The `element` parameter in the `getDepth` function is a reference to the HTML
- * element for which you want to calculate the depth in the DOM tree.
- * @returns The function `getDepth` returns the depth of the given `element` in the DOM tree, which is
- * the number of levels it is nested within its parent elements.
- */
-function getDepth(element) {
-  let depth = 0;
-  while (element.parentElement) {
-    depth++;
-    element = element.parentElement;
+function applyDataWords(element) {
+  if (element.dataset.words) {
+    const count = parseInt(element.dataset.words, 10);
+    if (!isNaN(count)) {
+      element.textContent = randomWords(count);
+      element.removeAttribute("data-words");
+    }
   }
-  return depth;
+
+  const childrenWithWords = element.querySelectorAll("[data-words]");
+  for (const child of childrenWithWords) {
+    const count = parseInt(child.dataset.words, 10);
+    if (!isNaN(count)) {
+      child.textContent = randomWords(count);
+      child.removeAttribute("data-words");
+    }
+  }
 }
