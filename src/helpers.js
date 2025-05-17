@@ -40,59 +40,37 @@ export function injectRepeatCSS() {
   injectCSS("[data-repeat]{display: none!important}");
 }
 
+export function hasRecursiveElement(list) {
+  list.forEach((item) => {
+    console.log(item);
+
+    if (item.querySelector("[data-repeat]")) {
+      return true;
+    }
+  });
+
+  return false;
+}
+
 /**
  * The `repeatElements` function clones elements with a `data-repeat` attribute, adjusts their content
  * based on a `data-words` attribute, and removes the original element after cloning.
  */
+export function repeatElements() {
+  let elements = document.querySelectorAll("[data-repeat]");
+  while (elements.length > 0) {
+    console.log(elements);
 
-export function repeatElements(root = document.body) {
-  const elements = Array.from(root.querySelectorAll("[data-repeat]"));
-
-  for (const el of elements) {
-    const count = parseInt(el.dataset.repeat, 10);
-    if (isNaN(count) || count < 1) continue;
-
-    const parent = el.parentElement;
-    const clones = [];
-
-    for (let i = 0; i < count; i++) {
-      const clone = el.cloneNode(true);
+    const currentElement = elements[0];
+    for (let i = 0; i < currentElement.dataset.repeat; i++) {
+      const clone = currentElement.cloneNode(true);
       clone.removeAttribute("data-repeat");
-
-      // Immediately fill words on this clone
-      applyDataWords(clone);
-
-      parent.insertBefore(clone, el);
-      clones.push(clone);
+      if (Boolean(currentElement.dataset.words)) {
+        clone.textContent = randomWords(currentElement.dataset.words);
+      }
+      currentElement.insertAdjacentElement("afterend", clone);
     }
-
-    parent.removeChild(el); // remove the original
-
-    // Recursively process inner repeats in each clone
-    for (const clone of clones) {
-      repeatElementsTopDown(clone);
-    }
-  }
-
-  // Also apply to the current root if needed
-  applyDataWords(root);
-}
-
-function applyDataWords(element) {
-  if (element.dataset.words) {
-    const count = parseInt(element.dataset.words, 10);
-    if (!isNaN(count)) {
-      element.textContent = randomWords(count);
-      element.removeAttribute("data-words");
-    }
-  }
-
-  const childrenWithWords = element.querySelectorAll("[data-words]");
-  for (const child of childrenWithWords) {
-    const count = parseInt(child.dataset.words, 10);
-    if (!isNaN(count)) {
-      child.textContent = randomWords(count);
-      child.removeAttribute("data-words");
-    }
+    currentElement.remove();
+    elements = document.querySelectorAll("[data-repeat]");
   }
 }
