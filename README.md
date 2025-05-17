@@ -15,8 +15,6 @@ Repeat elements inside HTML pages using a simple attribute.
 </div>
 ```
 
-<iframe height="300" style="width: 100%;" scrolling="no" title="Untitled" src="https://codepen.io/tahashieenavaz/embed/bNNJBGx?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-  See the Pen <a href="https://codepen.io/tahashieenavaz/pen/bNNJBGx">
-  Untitled</a> by Taha Shieenavaz (<a href="https://codepen.io/tahashieenavaz">@tahashieenavaz</a>)
-  on <a href="https://codepen.io">CodePen</a>.
-</iframe>
+<p align="center">
+    <img src="./art/footer-navigation.png" />
+</p>
